@@ -1,0 +1,14 @@
+name: FailProbe
+on:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pretend build
+        run: |
+          echo "Compiling api/backend ..."
+          echo "src/index.ts(15,23): error TS2339: Property 'invalidProperty' does not exist on type 'User'."
+          echo "npm ERR! code ELIFECYCLE"
+          echo "npm ERR! errno 2"
+          exit 1
