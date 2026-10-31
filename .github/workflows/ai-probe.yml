@@ -1,0 +1,20 @@
+name: AI Probe
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  models: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: curl models endpoint
+        run: |
+          echo "--- headers ---"
+          curl -s -i --max-time 30 -X POST https://models.github.ai/inference/chat/completions \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"model":"openai/gpt-4o","messages":[{"role":"user","content":"reply with the word pong"}]}' | head -40
+      - name: curl github api
+        run: |
+          curl -s -o /dev/null -w "api.github.com status=%{http_code}\n" --max-time 30 -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/rate_limit
